@@ -29,7 +29,7 @@ public class Parser implements Loggable {
             currentToken = iterator.next();
     }
 
-    private Equation fExpr() {
+    private Equation fExpr() throws IllegalArgumentException {
         Equation equation = fSum();
         getCurrentToken();
         if (currentToken == null) throw new IllegalArgumentException("Wrong format of equation");
@@ -120,11 +120,11 @@ public class Parser implements Loggable {
         return equation;
     }
 
-    private Equation fValue() {
+    private Equation fValue() throws IllegalArgumentException {
         Equation equation = null;
 
         getCurrentToken();
-        if (currentToken == null) return equation;
+        if (currentToken == null) return null;
         logger.finer("Got token: " + currentToken);
         switch (currentToken.getClass().getSimpleName()) {
             case "TokenNumber": case "TokenX":
@@ -137,7 +137,7 @@ public class Parser implements Loggable {
                 getCurrentToken();
                 if (currentToken == null ||
                         !currentToken.getClass().getSimpleName().equals("TokenOperationParenthesisRight"))
-                    throw new IllegalStateException("Missing closing parenthesis");
+                    throw new IllegalArgumentException("Missing closing parenthesis");
                 consumeCurrentToken();
                 break;
         }

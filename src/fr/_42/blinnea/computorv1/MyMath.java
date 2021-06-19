@@ -13,8 +13,12 @@ public interface MyMath {
 
     static double sqrt(double value, double eps) {
         double result = 1;
-        for (double tmp = (result + value / result) / 2; Math.abs(result - tmp) >= eps; tmp = (result + value / result) / 2)
+        for (double tmp = (result + value / result) / 2; MyMath.abs(result - tmp) >= eps; tmp = (result + value / result) / 2)
             result = tmp;
         return result;
+    }
+
+    static double abs(double value) {
+        return value < 0.0 ? -value : value;
     }
 }
