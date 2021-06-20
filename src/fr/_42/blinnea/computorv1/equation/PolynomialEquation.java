@@ -142,7 +142,7 @@ public class PolynomialEquation implements Equation, Cloneable {
                 if (hasZeroSolution) return "The solution is:\n" + format.format(0.0);
                 return "The equation has no solutions";
             case 1:
-                double root = equation.firstEntry().getValue() / equation.lastEntry().getValue();
+                double root = -equation.firstEntry().getValue() / equation.lastEntry().getValue();
                 if (hasZeroSolution) return "The two solutions are:\n" + format.format(0.0) + "\n" + format.format(root);
                 return "The solution is:\n" + format.format(root);
             case 2:
@@ -151,20 +151,28 @@ public class PolynomialEquation implements Equation, Cloneable {
                         c = equation.getOrDefault(0, 0.0);
                 double D = MyMath.raise(b,2) - 4 * a * c;
                 StringBuilder result = new StringBuilder();
-                if (D < 0.0) {
-                    result.append("The discriminant is negative.\n");
-                    if (hasZeroSolution) result.append("The solution is:\n").append(format.format(0.0));
-                    else result.append("The equation has no real solutions");
-                } else if (D < EPS) {
+                if (MyMath.abs(D) < EPS) {
                     root = -b / (2 * a);
+
                     result.append("The discriminant is equal to zero.\n");
                     if (hasZeroSolution) result.append("The solutions are:\n").append(format.format(0.0)).append("\n").append(format.format(root));
                     else result.append("The solution is:\n").append(format.format(root));
+                } else if (D < 0.0) {
+                    double resultReal = -b / (2 * a);
+                    resultReal = MyMath.abs(resultReal) < EPS ? 0.0 : resultReal;
+                    double resultImaginary = MyMath.sqrt(MyMath.abs(D), EPS) / (2 * a);
+
+                    result.append("The discriminant is negative. There are two complex solutions.\n");
+                    result.append("The solutions are:\n");
+                    if (hasZeroSolution) result.append(format.format(0.0)).append("\n");
+                    result.append(format.format(resultReal)).append(" + ").append(format.format(resultImaginary)).append(" * i").append("\n");
+                    result.append(format.format(resultReal)).append(" - ").append(format.format(resultImaginary)).append(" * i");
                 } else {
                     root = ((MyMath.sqrt(D, EPS) - b) / (2 * a));
                     double rootB = ((-MyMath.sqrt(D, EPS) - b) / (2 * a));
                     result.append("The discriminant is larger than zero.\n");
-                    if (hasZeroSolution) result.append("The solutions are:\n").append(format.format(0.0)).append("\n");
+                    result.append("The solutions are:\n");
+                    if (hasZeroSolution) result.append(format.format(0.0)).append("\n");
                     result.append(format.format(root)).append("\n").append(format.format(rootB));
                 }
                 return result.toString();
