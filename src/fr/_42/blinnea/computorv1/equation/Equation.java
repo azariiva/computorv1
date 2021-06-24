@@ -1,7 +1,5 @@
 package fr._42.blinnea.computorv1.equation;
 
-import com.sun.javaws.exceptions.InvalidArgumentException;
-
 public interface Equation {
     Equation add(Equation equation);
     Equation subtract(Equation equation);

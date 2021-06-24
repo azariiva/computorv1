@@ -17,12 +17,10 @@ public class TokenFactory implements Loggable {
         logger.finer(String.format("type=%s, stringRepresentation=\"%s\", startIndex=%d, endIndex=%d",
                 type, stringRepresentation, startIndex, endIndex));
         if (startIndex + 1 == endIndex) return getToken(type, stringRepresentation, startIndex);
-        switch (type) {
-            case NUMBER:
-                return new TokenNumber(new Double(stringRepresentation), startIndex, endIndex);
-            default:
-                throw new IllegalTokenTypeException(type);
+        if (type == TokenType.NUMBER) {
+            return new TokenNumber(new Double(stringRepresentation), startIndex, endIndex);
         }
+        throw new IllegalTokenTypeException(type);
     }
 
     /**
@@ -91,7 +89,7 @@ public class TokenFactory implements Loggable {
         }
     }
 
-    static class IllegalTokenTypeException extends IllegalArgumentException {
+    public static class IllegalTokenTypeException extends IllegalArgumentException {
         IllegalTokenTypeException(TokenType tokenType) {
             super("token of type " + tokenType.toString() + " is not supported");
         }

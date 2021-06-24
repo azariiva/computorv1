@@ -1,12 +1,21 @@
 package fr._42.blinnea.computorv1;
 
+import fr._42.blinnea.computorv1.equation.PolynomialEquation;
 import fr._42.blinnea.computorv1.tokenizer.Tokenizer;
 
 public class Main implements Loggable {
     public static void main(String[] args) {
-        Loggable.setupDefaultLogger();
-        Tokenizer tokenizer = new Tokenizer("1*2=2^3^(1+1)/5*X");
-        Parser parser = new Parser(tokenizer.iterator());
-        System.out.println(parser.parse());
+        try {
+            Tokenizer tokenizer = new Tokenizer(args[0]);
+            Parser parser = new Parser(tokenizer.iterator());
+            PolynomialEquation equation = (PolynomialEquation) parser.parse();
+            System.out.println("Reduced form: " + equation + " = 0");
+            System.out.println("Polynomial degree: " + equation.getHighestExponent());
+            System.out.println(equation.getSolution());
+        } catch (IndexOutOfBoundsException ex) {
+            System.out.println("Missing command line argument");
+        } catch (IllegalArgumentException ex) {
+            System.out.println(ex.getClass().getSimpleName() + ": " + ex.getMessage());
+        }
     }
 }

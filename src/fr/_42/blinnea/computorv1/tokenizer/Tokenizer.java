@@ -23,12 +23,11 @@ public class Tokenizer implements Iterable<Token>, Loggable {
             @Override
             public boolean hasNext() {
                 logger.entering(getClass().toString(), "hasNext");
-                boolean result = input.length() > index;
-                return result;
+                return input.length() > index;
             }
 
             @Override
-            public Token next() {
+            public Token next() throws IllegalTokenException {
                 logger.entering(getClass().toString(), "next");
                 Token result = null;
                 char c = input.charAt(index);
@@ -88,7 +87,7 @@ public class Tokenizer implements Iterable<Token>, Loggable {
             }
 
             @Override
-            public void remove() {
+            public void remove() throws UnsupportedOperationException {
                 throw new UnsupportedOperationException();
             }
         };
@@ -96,7 +95,7 @@ public class Tokenizer implements Iterable<Token>, Loggable {
 
     class IllegalTokenException extends IllegalArgumentException {
         IllegalTokenException(String str, int index) {
-            super(String.format("Illegal token \'%c\' was met at %d in string \"%s\"", str.charAt(index), index, str));
+            super(String.format("Illegal token '%c' was met at %d in string \"%s\"", str.charAt(index), index, str));
         }
     }
 
