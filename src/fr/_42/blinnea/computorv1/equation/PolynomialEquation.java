@@ -1,6 +1,6 @@
 package fr._42.blinnea.computorv1.equation;
 
-import fr._42.blinnea.computorv1.MyMath;
+import fr._42.blinnea.computorv1.math.Math;
 import fr._42.blinnea.computorv1.tokenizer.tokens.TokenNumber;
 import fr._42.blinnea.computorv1.tokenizer.tokens.TokenX;
 
@@ -27,7 +27,7 @@ public class PolynomialEquation implements Equation, Cloneable {
 
     public PolynomialEquation(Double value, Integer exponent) {
         equation = new TreeMap<>();
-        if (Math.abs(value) >= EPS)
+        if (java.lang.Math.abs(value) >= EPS)
             equation.put(exponent, value);
     }
 
@@ -82,8 +82,8 @@ public class PolynomialEquation implements Equation, Cloneable {
             int exponent = entry.getValue().intValue();
             entry = this.equation.firstEntry();
             this.equation.remove(entry.getKey());
-            double value = MyMath.raise(entry.getValue(), exponent);
-            if (Math.abs(value) >= EPS)
+            double value = Math.raise(entry.getValue(), exponent);
+            if (java.lang.Math.abs(value) >= EPS)
                 this.equation.put(entry.getKey() * exponent, value);
         }
         return this;
@@ -117,7 +117,6 @@ public class PolynomialEquation implements Equation, Cloneable {
         DecimalFormat formatA = new DecimalFormat("0.######");
         formatA.setNegativePrefix("(" + formatA.getNegativePrefix() + formatA.getPositiveSuffix());
         formatA.setNegativeSuffix(")");
-        Format formatB = new DecimalFormat("#");
 
         if (equation.size() == 0) return "0";
         StringBuilder stringBuilder = new StringBuilder();
@@ -142,7 +141,7 @@ public class PolynomialEquation implements Equation, Cloneable {
         polynomialEquation.equation.forEach((k, v)->{
             if (this.equation.putIfAbsent(k,v) != null) {
                 double sum = this.equation.get(k) + v;
-                if (Math.abs(sum) >= EPS)
+                if (java.lang.Math.abs(sum) >= EPS)
                     this.equation.replace(k, sum);
                 else
                     this.equation.remove(k);
@@ -171,7 +170,7 @@ public class PolynomialEquation implements Equation, Cloneable {
             aEquation.forEach((k,v)->{
                 double product = v * aMember.getValue();
                 Integer exponent = k + aMember.getKey();
-                if (Math.abs(product) >= EPS)
+                if (java.lang.Math.abs(product) >= EPS)
                     newEquation.put(exponent, product);
             });
             this.equation = newEquation;
