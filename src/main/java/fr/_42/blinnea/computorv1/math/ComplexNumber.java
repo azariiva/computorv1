@@ -5,7 +5,7 @@ import java.text.Format;
 import java.util.Objects;
 
 public class ComplexNumber {
-    private static final Format formatIm = new DecimalFormat(" + 0.######i; - 0.######i");
+    private static final Format formatIm = new DecimalFormat("+0.######i;-0.######i");
     private static final Format formatRe = new DecimalFormat("0.######");
 
     private Double re;
@@ -31,8 +31,11 @@ public class ComplexNumber {
 
     @Override
     public String toString() {
-        if (im != 0.0)
-            return formatRe.format(re) + formatIm.format(im);
+        if (im != 0.0) {
+            if (re != 0.0)
+                return formatRe.format(re) + formatIm.format(im);
+            return formatIm.format(im);
+        }
         return formatRe.format(re);
     }
 

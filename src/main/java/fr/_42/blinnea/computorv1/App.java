@@ -8,8 +8,6 @@ import java.util.logging.Level;
 public class App implements Loggable {
     public static void main(String[] args) {
         try {
-            Loggable.setupDefaultLogger();
-            logger.setLevel(Level.ALL);
             Tokenizer tokenizer = new Tokenizer(args[0]);
             Parser parser = new Parser(tokenizer.iterator());
             PolynomialEquation equation = (PolynomialEquation) parser.parse();
