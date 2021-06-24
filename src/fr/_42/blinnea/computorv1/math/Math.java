@@ -1,6 +1,6 @@
 package fr._42.blinnea.computorv1.math;
 
-public interface MyMath {
+public interface Math {
     static double raise(double value, int exponent) {
         double result = 1.0;
         if (exponent >= 0) {

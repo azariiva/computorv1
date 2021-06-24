@@ -11,8 +11,6 @@ public class Tokenizer implements Iterable<Token>, Loggable {
     private int index;
 
     public Tokenizer(String input) throws IllegalArgumentException {
-        //TODO: Change error management later
-        if (input == null) throw new IllegalArgumentException("Input string could not be null");
         this.input = input;
         this.index = 0;
     }
@@ -100,7 +98,7 @@ public class Tokenizer implements Iterable<Token>, Loggable {
     }
 
     public static void main(String[] args) {
-        //Loggable.setupDefaultLogger();
+        Loggable.setupDefaultLogger();
         String input = "5.5. * X^0 + 4 * X^1 - 9.3 * X^2 = 1 * X^0";
         Tokenizer tokenizer = new Tokenizer(input);
         for (Token token : tokenizer) {

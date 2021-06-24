@@ -1,5 +1,6 @@
 package fr._42.blinnea.computorv1.equation;
 
+import fr._42.blinnea.computorv1.math.ComplexNumber;
 import fr._42.blinnea.computorv1.math.Math;
 import fr._42.blinnea.computorv1.tokenizer.tokens.TokenNumber;
 import fr._42.blinnea.computorv1.tokenizer.tokens.TokenX;
@@ -23,7 +24,7 @@ public class PolynomialEquation implements Equation, Cloneable {
         highestExponent = 0;
     }
 
-    public PolynomialEquation(Double value, Integer exponent) {
+    public PolynomialEquation(double value, int exponent) {
         equation = new TreeMap<>();
         if (Math.abs(value) >= EPS)
             equation.put(exponent, value);
@@ -56,7 +57,8 @@ public class PolynomialEquation implements Equation, Cloneable {
     @Override
     public Equation divide(Equation equation) throws EquationException {
         entryCheck(equation);
-        //TODO: Should be replaced with call to multiplicativeInverseCopy()
+        // REVIEW
+        //  Может быть заменено одним действием multiplicativeInverseCopy()
         multiplyWithoutCheck(equation.clone().multiplicativeInverse());
         updateExponents();
         return this;
@@ -105,11 +107,12 @@ public class PolynomialEquation implements Equation, Cloneable {
         if (equation.size() == 0) return "0";
         StringBuilder stringBuilder = new StringBuilder();
         equation.forEach((k, v) -> {
-            stringBuilder.append(formatA.format(v)).append(" * ").append("X^").append(formatA.format(k)).append(" + ");
-//            if (Math.abs(v - v.longValue()) < EPS)
-//                stringBuilder.append(k == 0 ? String.format("%.0f + ", v) : String.format("%.0f * X^%d + ", v, k));
-//            else
-//                stringBuilder.append(k == 0 ? String.format("%.6f + ", v) : String.format("%.6f * X^%d + ", v, k));
+            if (k == 0)
+                stringBuilder.append(format.format(v)).append(" + ");
+            else if (k == 1)
+                stringBuilder.append(format.format(v)).append(" * ").append("X").append(" + ");
+            else
+                stringBuilder.append(format.format(v)).append(" * ").append("X^").append(format.format(k)).append(" + ");
         });
         stringBuilder.delete(stringBuilder.length() - 3, stringBuilder.length());
         return stringBuilder.toString();
@@ -131,9 +134,6 @@ public class PolynomialEquation implements Equation, Cloneable {
         return highestExponent;
     }
 
-    /**
-     * @return roots of equation in List or null if any real number is solution
-     */
     public String getSolution() {
         if (this.equation.size() == 0) return "Any real number is solution";
 
@@ -164,15 +164,14 @@ public class PolynomialEquation implements Equation, Cloneable {
                     if (hasZeroSolution) result.append("The solutions are:\n").append(format.format(0.0)).append("\n").append(format.format(root));
                     else result.append("The solution is:\n").append(format.format(root));
                 } else if (D < 0.0) {
-                    double resultReal = -b / (2 * a);
-                    resultReal = Math.abs(resultReal) < EPS ? 0.0 : resultReal;
-                    double resultImaginary = Math.sqrt(MyMath.abs(D), EPS) / (2 * a);
+                    ComplexNumber sqrtD = new ComplexNumber(0, Math.sqrt(Math.abs(D), EPS));
+                    ComplexNumber complexB = new ComplexNumber(-b, 0);
 
                     result.append("The discriminant is negative. There are two complex solutions.\n");
                     result.append("The solutions are:\n");
                     if (hasZeroSolution) result.append(format.format(0.0)).append("\n");
-                    result.append(format.format(resultReal)).append(" + ").append(format.format(resultImaginary)).append(" * i").append("\n");
-                    result.append(format.format(resultReal)).append(" - ").append(format.format(resultImaginary)).append(" * i");
+                    result.append(ComplexNumber.add(complexB, sqrtD).divide(2 * a)).append("\n");
+                    result.append(ComplexNumber.subtract(complexB, sqrtD).divide(2 * a));
                 } else {
                     root = ((Math.sqrt(D, EPS) - b) / (2 * a));
                     double rootB = ((-Math.sqrt(D, EPS) - b) / (2 * a));
@@ -238,13 +237,14 @@ public class PolynomialEquation implements Equation, Cloneable {
             if (this.equation.size() == 0) throw new EquationException("0^0 is undefined");
             this.equation = new TreeMap<>();
             this.equation.put(0, 1.0);
-        } else if (this.equation.size() == 0)  {
-            // Leave this empty
+        } else //noinspection StatementWithEmptyBody
+            if (this.equation.size() == 0)  {
         } else if (polynomialEquation.equation.size() != 1 ||
                 polynomialEquation.equation.firstEntry().getKey() != 0) {
             throw new EquationException("This operation could not be performed because result is not poly");
         } else if (this.equation.size() != 1) {
-            //TODO: Can be implemented later
+            // REVIEW
+            //  MAYBE Может быть реализовано с использованием полинома Ньютона
             throw new EquationException("Could not raise poly");
         } else {
             Map.Entry<Integer,Double> entry = polynomialEquation.equation.firstEntry();
